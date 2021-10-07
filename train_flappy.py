@@ -4,7 +4,7 @@ from q_learning import QLearning
 
 import time
 
-# 将环境的observation转换为Q-learningd的state
+# 将环境的observation转换为Q-learning的state
 def get_state(obs):
     """
     Get current state of bird in environment.
@@ -64,9 +64,9 @@ if __name__ == '__main__':
                     e_greedy=0.9)
 
     # 加载已训练好的Q table
-    agent.load_q_table('data/q_table_iter_19000.csv')
+    agent.load_q_table('data/q_table_iter_20000.csv')
 
-    MAX_EPISODES = 18000 # 迭代次数超过19000时 分数超过10000分
+    MAX_EPISODES = 18000 # 迭代次数接近19000次时,分数超过10000分，接近20000次时，分数接近700000分
 
     RENDER = True # 训练的时候建议设为False Better set False while training
 
@@ -87,14 +87,17 @@ if __name__ == '__main__':
             obs_, r, done = env.step(a)
             s_ = get_state(obs_)
 
-            # 更新Q-table 
+            # 更新Q-table update Q-table 
             agent.learn(s, a, r, s_, done)
+            
+            # 更新状态 update state
             s = s_
 
             if done:
                 print('episode {} , score: {} , max score: {}'.format(str(ep), env.get_score(), env.get_max_score()))    
                 break
             
+    
     run_time = (time.time() - t) / 3600
     print('It took {} hours in training {} episodes'.format(run_time, MAX_EPISODES))    
     # 保存Q table
